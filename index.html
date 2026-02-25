@@ -1,0 +1,1317 @@
+<!DOCTYPE html>
+<html lang="uz">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>CYBER ACADEMY | Professional Platforma</title>
+
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/qrcodejs/1.0.0/qrcode.min.js"></script>
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/html2canvas/1.4.1/html2canvas.min.js"></script>
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/jspdf/2.5.1/jspdf.umd.min.js"></script>
+
+    <style>
+        /* =========================================
+            DIZAYN QISMI (CSS)
+            ========================================= */
+        :root {
+            --neon-yashil: #00ff41;
+            --qora-fon: #050a05;
+            --shisha-fon: rgba(0, 40, 0, 0.9);
+            --nurlanish: 0 0 15px rgba(0, 255, 65, 0.5);
+            --oltin: #ffd700;
+        }
+
+        body {
+            margin: 0; 
+            padding: 0; 
+            color: var(--neon-yashil);
+            font-family: 'Courier New', monospace;
+            background: var(--qora-fon) url('https://images.unsplash.com/photo-1550751827-4bd374c3f58b?auto=format&fit=crop&w=1920&q=80') no-repeat center center fixed;
+            background-size: cover; 
+            overflow-x: hidden;
+            cursor: default;
+        }
+
+        body::before {
+            content: ""; 
+            position: fixed; 
+            top: 0; 
+            left: 0; 
+            width: 100%; 
+            height: 100%;
+            background: rgba(0, 0, 0, 0.85); 
+            z-index: -1;
+        }
+
+        /* --- VAZIFALAR PANELI (NAVBAR) --- */
+        #topNavbar {
+            display: none;
+            justify-content: space-between;
+            align-items: center;
+            background: rgba(0, 20, 0, 0.95);
+            border-bottom: 2px solid var(--neon-yashil);
+            padding: 15px 40px;
+            position: fixed;
+            top: 0; 
+            left: 0; 
+            width: 100%;
+            z-index: 1000;
+            box-sizing: border-box;
+            box-shadow: 0 5px 20px rgba(0,255,65,0.2);
+        }
+
+        .nav-logo {
+            font-size: 1.8rem;
+            font-weight: 900;
+            letter-spacing: 4px;
+            text-shadow: var(--nurlanish);
+            cursor: pointer;
+        }
+
+        .nav-links {
+            display: flex;
+            gap: 30px;
+            align-items: center;
+        }
+
+        .nav-item {
+            font-size: 1.1rem;
+            font-weight: bold;
+            color: var(--neon-yashil);
+            cursor: pointer;
+            position: relative;
+            text-transform: uppercase;
+            padding: 8px 15px;
+            transition: 0.3s;
+            border-radius: 5px;
+        }
+
+        .nav-item:hover {
+            text-shadow: var(--nurlanish);
+            background: rgba(0, 255, 65, 0.15);
+        }
+
+        /* --- DROPDOWN MENYU --- */
+        .dropdown-menu {
+            display: none;
+            position: absolute;
+            top: 100%;
+            left: 0;
+            margin-top: 10px;
+            background: rgba(0, 15, 0, 0.98);
+            border: 1px solid var(--neon-yashil);
+            min-width: 320px;
+            max-height: 400px;
+            overflow-y: auto;
+            z-index: 1001;
+            box-shadow: var(--nurlanish);
+            border-radius: 5px;
+            text-align: left;
+        }
+
+        .dropdown-item {
+            padding: 15px;
+            border-bottom: 1px solid rgba(0,255,65,0.2);
+            font-size: 0.95rem;
+            color: #fff;
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            transition: 0.2s;
+        }
+
+        .dropdown-item:last-child {
+            border-bottom: none;
+        }
+
+        .dropdown-item:hover:not(.qulf) {
+            background: rgba(0, 255, 65, 0.2);
+            color: var(--neon-yashil);
+            cursor: pointer;
+        }
+
+        .dropdown-item.qulf {
+            color: #555;
+            cursor: not-allowed;
+            background: rgba(0, 0, 0, 0.5);
+        }
+
+        /* --- SCROLLBAR --- */
+        ::-webkit-scrollbar {
+            width: 8px;
+            height: 8px;
+        }
+        ::-webkit-scrollbar-track {
+            background: #000;
+        }
+        ::-webkit-scrollbar-thumb {
+            background: var(--neon-yashil);
+            border-radius: 4px;
+        }
+
+        /* --- UMUMIY SAHIFA STILI --- */
+        .sahifa { 
+            display: none;
+            width: 100%;
+            max-width: 1200px;
+            margin: 0 auto;
+            padding: 120px 20px 40px 20px;
+            box-sizing: border-box;
+            text-align: center;
+            min-height: 100vh;
+        }
+
+        .faol {
+            display: flex;
+            flex-direction: column;
+            align-items: center;
+            justify-content: flex-start;
+        }
+
+        /* --- KIRISH SAHIFASI --- */
+        #kirishSahifasi.faol {
+            display: flex;
+            flex-direction: row;
+            gap: 50px;
+            height: 100vh;
+            padding: 0;
+            align-items: center;
+            justify-content: center;
+        }
+
+        .chap-tomon {
+            flex: 1;
+            display: flex;
+            justify-content: flex-end;
+            align-items: center;
+            height: 100%;
+        }
+
+        .ong-tomon {
+            flex: 1;
+            display: flex;
+            flex-direction: column;
+            align-items: flex-start;
+            justify-content: center;
+            padding-left: 20px;
+        }
+
+        .mobil-video-ramka {
+            width: 300px;
+            height: 533px;
+            border: 3px solid var(--neon-yashil);
+            box-shadow: 0 0 25px var(--neon-yashil);
+            background: #000;
+            overflow: hidden;
+            border-radius: 15px;
+            position: relative;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+        }
+
+        .mobil-video-ramka img {
+            width: 100%;
+            height: 100%;
+            object-fit: cover;
+        }
+
+        .logo {
+            font-size: 3.5rem;
+            font-weight: 900;
+            letter-spacing: 8px;
+            margin-bottom: 20px;
+            text-shadow: var(--nurlanish);
+            line-height: 1.2;
+            text-align: left;
+        }
+
+        #ismInput {
+            border: 2px solid var(--neon-yashil);
+            background: rgba(0,255,65,0.05);
+            color: var(--neon-yashil);
+            font-size: 1.2rem;
+            padding: 15px;
+            width: 320px;
+            text-align: left;
+            outline: none;
+            margin-bottom: 25px;
+            font-family: 'Courier New', monospace;
+            font-weight: bold;
+        }
+
+        .tugma {
+            background: var(--neon-yashil);
+            color: #000;
+            border: none;
+            padding: 15px 40px;
+            font-size: 1.1rem;
+            font-weight: bold;
+            cursor: pointer;
+            margin: 5px;
+            clip-path: polygon(10% 0, 100% 0, 90% 100%, 0 100%);
+            transition: 0.3s;
+            text-transform: uppercase;
+        }
+
+        .tugma:hover {
+            filter: brightness(1.2);
+            box-shadow: 0 0 15px var(--neon-yashil);
+        }
+
+        .call-center {
+            margin-top: 30px;
+            font-size: 1rem;
+            color: #fff;
+            border: 1px solid var(--neon-yashil);
+            padding: 10px 20px;
+            background: rgba(0, 20, 0, 0.8);
+            display: flex;
+            align-items: center;
+            gap: 10px;
+            box-shadow: 0 0 10px rgba(0, 255, 65, 0.3);
+        }
+
+        /* --- ASOSIY MENYU (DARSLAR GRIDI) --- */
+        .darslar-seti {
+            display: grid;
+            grid-template-columns: repeat(auto-fill, minmax(300px, 1fr));
+            gap: 25px;
+            width: 100%;
+            margin-top: 20px;
+        }
+
+        .dars-karta {
+            background: var(--shisha-fon);
+            border: 1px solid var(--neon-yashil);
+            border-radius: 8px;
+            cursor: pointer;
+            transition: 0.3s;
+            position: relative;
+            overflow: hidden;
+        }
+
+        .dars-karta:hover {
+            transform: translateY(-5px);
+            box-shadow: var(--nurlanish);
+        }
+
+        .karta-rasm {
+            width: 100%;
+            height: 180px;
+            object-fit: cover;
+            border-bottom: 1px solid rgba(0,255,65,0.3);
+        }
+
+        .karta-nomi {
+            font-size: 1rem;
+            padding: 15px;
+            color: #fff;
+            margin: 0;
+            font-weight: bold;
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+        }
+
+        .qulf-qatlami {
+            position: absolute;
+            top: 0;
+            left: 0;
+            width: 100%;
+            height: 100%;
+            background: rgba(0,0,0,0.7);
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            font-size: 3rem;
+            color: #555;
+            z-index: 10;
+        }
+
+        /* --- DARS VA TEST SAHIFASI --- */
+        .video-konteyner {
+            width: 100%;
+            max-width: 900px;
+            border: 2px solid var(--neon-yashil);
+            box-shadow: var(--nurlanish);
+            background: #000;
+            margin-bottom: 20px;
+            position: relative;
+        }
+
+        .iframe-wrap {
+            position: relative;
+            padding-bottom: 56.25%;
+            height: 0;
+        }
+
+        .iframe-wrap iframe {
+            position: absolute;
+            top: 0;
+            left: 0;
+            width: 100%;
+            height: 100%;
+        }
+
+        .test-markaz {
+            width: 100%;
+            max-width: 900px;
+            text-align: left;
+            background: rgba(0,0,0,0.95);
+            padding: 40px;
+            border: 2px solid var(--neon-yashil);
+            margin-bottom: 20px;
+            box-sizing: border-box;
+        }
+
+        .savol-bloki {
+            margin-bottom: 30px;
+            border-bottom: 1px solid rgba(0,255,65,0.2);
+            padding-bottom: 20px;
+        }
+
+        .savol-matn {
+            font-size: 1.2rem;
+            color: #fff;
+            margin-bottom: 15px;
+            font-weight: bold;
+        }
+
+        .variant {
+            display: block;
+            padding: 10px;
+            font-size: 1.05rem;
+            cursor: pointer;
+            border: 1px solid transparent;
+            transition: 0.2s;
+        }
+
+        .variant:hover {
+            color: var(--neon-yashil);
+            background: rgba(0,255,65,0.05);
+            border: 1px solid rgba(0,255,65,0.3);
+            border-radius: 5px;
+        }
+
+        /* --- PROFIL SAHIFASI --- */
+        .profil-header {
+            width: 100%;
+            max-width: 900px;
+            background: rgba(0,30,0,0.8);
+            border: 2px solid var(--neon-yashil);
+            padding: 30px;
+            text-align: left;
+            margin-bottom: 40px;
+            display: flex;
+            align-items: center;
+            gap: 30px;
+            box-shadow: inset 0 0 20px rgba(0,255,65,0.1);
+            border-radius: 10px;
+        }
+
+        .profil-avatar {
+            width: 120px;
+            height: 120px;
+            border-radius: 50%;
+            border: 3px solid var(--neon-yashil);
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            font-size: 4rem;
+            background: #000;
+            box-shadow: var(--nurlanish);
+        }
+
+        .profil-ism {
+            font-size: 2.5rem;
+            color: #fff;
+            margin: 0;
+            text-transform: uppercase;
+            text-shadow: var(--nurlanish);
+        }
+
+        .profil-info {
+            font-size: 1.1rem;
+            color: #aaa;
+            margin-top: 10px;
+            font-family: sans-serif;
+        }
+
+        .modul-sertifikat-karta {
+            background: linear-gradient(135deg, #021002, #000000);
+            border: 1px solid rgba(0,255,65,0.4);
+            padding: 25px;
+            margin-bottom: 20px;
+            text-align: left;
+            border-left: 8px solid var(--neon-yashil);
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            border-radius: 5px;
+            box-shadow: 0 5px 15px rgba(0,0,0,0.5);
+            transition: 0.3s;
+        }
+
+        .modul-sertifikat-karta:hover {
+            border-left-color: var(--oltin);
+            box-shadow: var(--nurlanish);
+        }
+
+        .modul-sertifikat-nomi {
+            font-size: 1.3rem;
+            color: #fff;
+            margin: 0 0 8px 0;
+            font-weight: bold;
+        }
+
+        .modul-sertifikat-status {
+            font-size: 0.95rem;
+            color: var(--neon-yashil);
+            margin: 0;
+            text-transform: uppercase;
+            letter-spacing: 1px;
+        }
+
+        .modul-badge {
+            font-size: 2.5rem;
+            filter: drop-shadow(0 0 5px var(--oltin));
+        }
+
+        .final-sertifikat-karta {
+            background: linear-gradient(135deg, #2a2000, #000);
+            border: 2px solid var(--oltin);
+            padding: 30px;
+            margin-top: 30px;
+            text-align: center;
+            box-shadow: 0 0 20px rgba(255,215,0,0.2);
+        }
+
+        /* --- YAKUNIY KATTA SERTIFIKAT STILI (ALBOM FORMATI) --- */
+        #sertifikatEksport {
+            width: 100%;
+            display: flex;
+            justify-content: center;
+            overflow-x: auto;
+            padding-bottom: 20px;
+        }
+
+        .sertifikat-qutisi {
+            width: 1050px;
+            min-height: 742px;
+            flex-shrink: 0;
+            padding: 50px 60px;
+            border: 15px double var(--neon-yashil);
+            background: radial-gradient(circle, #0a1f0a 0%, #000000 100%);
+            box-shadow: 0 0 50px rgba(0, 255, 65, 0.4);
+            position: relative;
+            text-align: center;
+            box-sizing: border-box;
+            color: white;
+            display: flex;
+            flex-direction: column;
+            justify-content: space-between;
+        }
+
+        .sertifikat-header {
+            font-size: 4rem;
+            font-weight: 900;
+            letter-spacing: 8px;
+            color: var(--neon-yashil);
+            text-shadow: 0 0 20px var(--neon-yashil);
+            margin: 0 auto 10px auto;
+            border-bottom: 3px solid var(--neon-yashil);
+            padding-bottom: 15px;
+            display: inline-block;
+        }
+
+        .sertifikat-matn {
+            font-size: 1.5rem;
+            color: #ddd;
+            margin: 10px 0;
+            letter-spacing: 2px;
+        }
+
+        .student-ism {
+            font-size: 4rem;
+            color: var(--oltin);
+            font-weight: bold;
+            font-family: 'Times New Roman', serif;
+            border-bottom: 2px dashed var(--oltin);
+            display: inline-block;
+            padding: 0 50px 10px 50px;
+            margin: 20px auto;
+            text-transform: uppercase;
+            text-shadow: 0 0 15px rgba(255,215,0,0.6);
+        }
+
+        .sertifikat-matn-k {
+            font-size: 1.3rem;
+            line-height: 1.8;
+            max-width: 800px;
+            margin: 0 auto;
+            color: #fff;
+        }
+
+        .sertifikat-footer {
+            display: flex;
+            justify-content: space-between;
+            align-items: flex-end;
+            width: 100%;
+            margin-top: 40px;
+        }
+
+        .qr-konteyner {
+            background: white;
+            padding: 10px;
+            border-radius: 8px;
+            width: 130px;
+            height: 130px;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            border: 2px solid #000;
+            box-shadow: 0 0 15px rgba(255,255,255,0.2);
+        }
+
+        .muhr {
+            width: 140px;
+            height: 140px;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+        }
+
+        /* =========================================
+            YANGI: SHIFRLASH (KRIPTOGRAFIYA) QISMI CSS
+            ========================================= */
+        .cipher-container {
+            width: 100%; max-width: 900px; text-align: left; background: rgba(0,0,0,0.9); padding: 30px; border: 2px solid var(--neon-yashil); box-shadow: var(--nurlanish); box-sizing: border-box; margin: 0 auto;
+        }
+        .cipher-scroll { width: 100%; overflow-x: auto; margin-top: 20px; padding-bottom: 10px; }
+        .cipher-table { border-collapse: separate; border-spacing: 2px; width: max-content; margin: 0 auto; }
+        .cipher-table th, .cipher-table td {
+            background-color: #cc0000; 
+            color: #ffffff;             
+            padding: 10px 15px;
+            font-family: 'Consolas', monospace;
+            font-size: 1.1rem;
+            font-weight: bold;
+            text-align: center;
+            border-radius: 4px;
+        }
+        .cipher-table th { background-color: #8b0000; }
+        .natija-maydoni { display: flex; align-items: center; gap: 10px; margin-top: 20px; }
+        .natija-maydoni input { flex: 1; border: 2px solid #00ff41; background: #111; color: #fff; padding: 12px; font-size: 1.2rem; outline: none; font-weight: bold; }
+
+        @media (max-width: 1100px) {
+            #sertifikatEksport {
+                justify-content: flex-start;
+            }
+        }
+
+        @media (max-width: 768px) {
+            #topNavbar {
+                padding: 10px;
+                flex-direction: column;
+                gap: 10px;
+            }
+            .nav-links {
+                gap: 10px;
+                flex-wrap: wrap;
+                justify-content: center;
+            }
+            .dropdown-menu {
+                width: 100%;
+                top: 100px;
+            }
+            .sahifa {
+                padding-top: 150px;
+            }
+            #kirishSahifasi.faol {
+                flex-direction: column;
+                gap: 20px;
+                padding-top: 20px;
+                height: auto;
+            }
+            .mobil-video-ramka {
+                width: 260px;
+                height: 462px;
+            }
+            .logo {
+                text-align: center;
+                font-size: 2.5rem;
+            }
+            #ismInput {
+                text-align: center;
+                width: 100%;
+                max-width: 320px;
+                box-sizing: border-box;
+            }
+            .profil-header {
+                flex-direction: column;
+                text-align: center;
+            }
+            .modul-sertifikat-karta {
+                flex-direction: column;
+                gap: 15px;
+                text-align: center;
+                border-left: none;
+                border-top: 5px solid var(--neon-yashil);
+            }
+        }
+    </style>
+</head>
+<body>
+
+    <div id="topNavbar">
+        <div class="nav-logo" onclick="sahifagaUtish('menyuSahifasi')">CYBER ACADEMY</div>
+        <div class="nav-links">
+            <div class="nav-item" onclick="toggleDropdown(event)">
+                MODULLAR ▼
+                <div id="modulDropdown" class="dropdown-menu"></div>
+            </div>
+            
+            <div class="nav-item" onclick="sahifagaUtish('shifrlashSahifasi')">🔐 KRIPTOGRAFIYA</div>
+            
+            <div class="nav-item" onclick="sahifagaUtish('profilSahifasi')">👤 PROFIL</div>
+            <div class="nav-item" onclick="sahifagaUtish('menyuSahifasi')">🏠 ASOSIY</div>
+            <div class="nav-item" onclick="chiqish()" style="color: #ff4444;">🚪 CHIQISH</div>
+        </div>
+    </div>
+
+    <div id="kirishSahifasi" class="sahifa faol">
+        <div class="chap-tomon">
+            <div class="mobil-video-ramka">
+                <img src="treyler.png" alt="Cyber Academy" id="promoRasm">
+            </div>
+        </div>
+        <div class="ong-tomon">
+            <div class="logo">CYBER<br>ACADEMY</div>
+            <p style="font-size: 1.2rem; color: #fff; margin-bottom: 20px; text-transform: uppercase;">Ro'yxatdan O'tish</p>
+            <input type="text" id="ismInput" placeholder="ISM VA FAMILIYANGIZ" autocomplete="off">
+            <button class="tugma" onclick="event.stopPropagation(); kirish()">TIZIMGA KIRISH_</button>
+            <div class="call-center">
+                <span style="font-size: 1.5rem;">📞</span>
+                <span>Aloqa uchun: +998 50 250 05 60</span>
+            </div>
+        </div>
+    </div>
+
+    <div id="menyuSahifasi" class="sahifa">
+        <h2 id="salomMatni" style="font-size: 2.2rem; text-shadow: var(--nurlanish); margin-bottom: 30px; text-transform: uppercase;"></h2>
+        <div class="darslar-seti" id="darslarJoyi"></div>
+    </div>
+
+    <div id="profilSahifasi" class="sahifa">
+        <div class="profil-header">
+            <div class="profil-avatar">🕵️</div>
+            <div>
+                <h2 id="profilIsm" class="profil-ism">FOYDALANUVCHI NOMI</h2>
+                <p class="profil-info">Mutaxassislik yo'nalishi: <b>Kiberxavfsizlik va Etik Hacking</b></p>
+                <p id="profilProgress" class="profil-info" style="color: var(--neon-yashil);">O'zlashtirish ko'rsatkichi: 0/5 modul</p>
+            </div>
+        </div>
+        <h2 style="text-align: left; font-size: 1.8rem; border-bottom: 2px solid var(--neon-yashil); padding-bottom: 10px; margin-bottom: 30px; text-shadow: var(--nurlanish);">OLINGAN SERTIFIKATLAR VA YUTUQLAR</h2>
+        <div id="profilSertifikatlarJoyi" style="width: 100%; max-width: 900px; margin: 0 auto;"></div>
+    </div>
+
+    <div id="darsSahifasi" class="sahifa">
+        <h2 id="darsSarlavha" style="font-size: 2rem; margin-bottom: 20px;"></h2>
+        <div class="video-konteyner iframe-wrap">
+            <iframe id="darsVideo" src="" frameborder="0" allowfullscreen></iframe>
+        </div>
+        <div style="margin-top: 30px;">
+            <button class="tugma" onclick="testniBoshlash()">IMTIHONNI BOSHLASH</button>
+            <button class="tugma" style="background:#444; color:#fff;" onclick="sahifagaUtish('menyuSahifasi')">ORQAGA QAYTISH</button>
+        </div>
+    </div>
+
+    <div id="testSahifasi" class="sahifa">
+        <h2 style="font-size: 2.8rem; letter-spacing: 5px; text-shadow: var(--nurlanish);">TERMINAL_TEST</h2>
+        <div id="testKonteyner" class="test-markaz"></div>
+        <button class="tugma" onclick="natijaniHisoblash()" style="padding: 15px 60px; font-size: 1.3rem;">TESTNI YAKUNLASH VA TEKSHIRISH</button>
+    </div>
+
+    <div id="natijaSahifasi" class="sahifa">
+        <div id="aylana" style="font-size: 4.5rem; width: 220px; height: 220px; border: 15px solid var(--neon-yashil); border-radius: 50%; display: flex; align-items: center; justify-content: center; margin: 40px auto; text-shadow: var(--nurlanish); font-weight: bold; background: rgba(0,255,65,0.05);">0%</div>
+        <h2 id="statusMatni" style="font-size: 2.5rem; margin-bottom: 30px;"></h2>
+        <button id="nextBtn" class="tugma" style="font-size: 1.2rem;"></button>
+    </div>
+
+    <div id="sertifikatSahifasi" class="sahifa">
+        <div id="sertifikatEksport">
+            <div class="sertifikat-qutisi" id="sertifikatBloki">
+                <div class="sertifikat-header">SERTIFIKAT</div>
+                <p class="sertifikat-matn">USHBU RASMIY HUJJAT TASDIQLAYDIKI</p>
+                
+                <div id="certIsm" class="student-ism">FOYDALANUVCHI</div>
+                
+                <p class="sertifikat-matn-k">
+                    CYBER ACADEMY tomonidan tashkil etilgan maxsus <br>
+                    <b>"KIBERXAVFSIZLIK VA ETIK HACKING"</b> o'quv dasturining <br>
+                    barcha bosqichlarini muvaffaqiyatli tamomladi va yakuniy imtihonlardan a'lo baho oldi.
+                </p>
+
+                <div class="sertifikat-footer">
+                    <div id="qrcode" class="qr-konteyner"></div>
+                    
+                    <div class="muhr">
+                        <img src="logo.png" alt="Cyber Academy Logo" style="width: 140px; height: 140px; object-fit: contain;">
+                    </div>
+                    
+                    <div style="text-align: right; min-width: 280px;">
+                        <p style="margin:0; color:#aaa; font-size: 1.1rem;">Bosh Direktor:</p>
+                        <p style="font-family:'Brush Script MT', cursive; font-size:2.8rem; color:#fff; margin: 10px 0;">Sirojiddin Savriyev</p>
+                        <div style="border-top:2px solid #fff; width:250px; margin-left: auto;"></div>
+                        <p id="certSana" style="font-weight:bold; color:#fff; margin-top: 10px; font-size: 1.3rem;">01.01.2024</p>
+                    </div>
+                </div>
+            </div>
+        </div>
+        
+        <div style="margin-top: 40px;">
+            <button class="tugma" onclick="yuklabOlishPDF()" style="background: var(--oltin);">PDF FORMATDA YUKLAB OLISH</button>
+            <button class="tugma" style="background:#444; color:#fff;" onclick="sahifagaUtish('profilSahifasi')">PROFILGA QAYTISH</button>
+        </div>
+    </div>
+
+    <div id="shifrlashSahifasi" class="sahifa">
+        <h2 style="font-size: 2.5rem; text-shadow: var(--nurlanish); margin-bottom: 20px;">TERMINAL: VIGENÈRE CIPHER (A=1)</h2>
+        
+        <div class="cipher-container">
+            <div style="margin-bottom: 15px;">
+                <label style="color:#fff; font-size:1.2rem; font-weight:bold;">Ochiq matn (Ti / Ci):</label><br>
+                <input type="text" id="cipherMatn" style="border: 2px solid var(--neon-yashil); background: rgba(0,255,65,0.05); color: var(--neon-yashil); font-size: 1.2rem; padding: 15px; width: 100%; box-sizing: border-box; outline: none; margin-top:5px; font-family: 'Courier New', monospace; font-weight: bold;" value="Munisa">
+            </div>
+            <div style="margin-bottom: 20px;">
+                <label style="color:#fff; font-size:1.2rem; font-weight:bold;">Maxfiy kalit (Gi):</label><br>
+                <input type="text" id="cipherKalit" style="border: 2px solid var(--neon-yashil); background: rgba(0,255,65,0.05); color: var(--neon-yashil); font-size: 1.2rem; padding: 15px; width: 100%; box-sizing: border-box; outline: none; margin-top:5px; font-family: 'Courier New', monospace; font-weight: bold;" value="Cyber">
+            </div>
+
+            <div>
+                <button class="tugma" style="background: #00B894; color: white;" onclick="shifrlashVigenere()">🔒 Shifrlash</button>
+                <button class="tugma" style="background: #D63031; color: white;" onclick="deshifrlashVigenere()">🔓 Deshifrlash</button>
+                <button class="tugma" style="background: #0984E3; color: white;" onclick="tozalashCipher()">🔄 Tozalash</button>
+            </div>
+
+            <div class="cipher-scroll" id="cipherJadvalKonteyner"></div>
+
+            <div class="natija-maydoni">
+                <span style="font-size:1.5rem; font-weight:bold; color:var(--neon-yashil);">Natija:</span>
+                <input type="text" id="cipherNatija" readonly>
+                <button class="tugma" style="background: var(--oltin); color: black; padding: 12px 20px;" onclick="nusxalashCipher()">Nusxalash</button>
+            </div>
+        </div>
+    </div>
+
+    <script>
+        // =========================================
+        // YOUTUBE VIDEO VA TESTLAR BAZASI
+        // Yangi dars qo'shish uchun shu joyga yozasiz
+        // =========================================
+        let darslar = [
+            {
+                id: 1,
+                t: "1-Modul: Kiberxavfsizlikka Kirish", // Dars nomi
+                v: "https://youtu.be/BvL4VZTrKQY?si=t_w3MNDfBBjXy33m" // YouTube link
+            },
+            {
+                id: 2,
+                t: "2-Modul:MACAN - Май (Официальная премьера трека)",
+                v: "https://youtu.be/6pdfYn8BthY?si=s8yRA5zDG_wng5oT"
+            },
+            {
+                id: 3,
+                t: "3-Modul:Jah Khalib – Доча | ПРЕМЬЕРА ТРЕКА",
+                v: "https://youtu.be/ME-29s54CE0?si=jBWf0zFrqel4zsMR"
+            },
+           
+        ];
+
+        let testlar = {
+            1: [
+                { q: "Kiberxavfsizlikning asosiy maqsadi nima?", a: ["Hujum qilish", "Himoyalash", "Dasturlash"], c: "Himoyalash" },
+                { q: "Malware nima?", a: ["Foydali dastur", "Zararli dastur", "Antivirus"], c: "Zararli dastur" }
+            ],
+            2: [
+                { q: "IP manzil nima?", a: ["Tarmoq qurilmasining manzili", "Kompyuter paroli", "Sayt nomi"], c: "Tarmoq qurilmasining manzili" },
+                { q: "Wi-Fi ni qanday himoyalash kerak?", a: ["Ochiq qoldirish", "WPA2/WPA3 parolini qo'yish", "Parolni aytib berish"], c: "WPA2/WPA3 parolini qo'yish" }
+            ],
+            3: [
+                { q: "Etik Hacking nima?", a: ["Qonuniy ravishda tizimni tekshirish", "O'g'rilik qilish", "Faqat sayt buzish"], c: "Qonuniy ravishda tizimni tekshirish" },
+                { q: "Phishing qanday hujum turi?", a: ["Tarmoqni uzish", "Aldov orqali ma'lumot olish", "Fayllarni o'chirish"], c: "Aldov orqali ma'lumot olish" }
+            ]
+        };
+        // =========================================
+
+        let foydalanuvchi = localStorage.getItem('cyber_user_name') || "";
+        let joriyDars = null;
+        let progress = parseInt(localStorage.getItem('cyber_p_v5')) || 0; 
+
+        window.onload = () => {
+            if (foydalanuvchi) { 
+                tizimgaKirildi(); 
+            }
+        };
+
+        function sahifagaUtish(id) {
+            document.querySelectorAll('.sahifa').forEach(s => { 
+                s.classList.remove('faol'); 
+                s.style.display = 'none'; 
+            });
+            
+            const target = document.getElementById(id);
+            target.classList.add('faol');
+            
+            if (id === 'kirishSahifasi' || id === 'sertifikatSahifasi') {
+                document.getElementById('topNavbar').style.display = 'none';
+            } else {
+                document.getElementById('topNavbar').style.display = 'flex';
+                yangilashNavbar(); 
+            }
+
+            if (id === 'kirishSahifasi' || id === 'testSahifasi' || id === 'natijaSahifasi') { 
+                target.style.display = 'flex'; 
+            } else { 
+                target.style.display = 'block'; 
+            }
+            
+            if (id === 'profilSahifasi') {
+                yangilashProfil();
+            }
+            
+            if (id === 'menyuSahifasi') {
+                menuniYangilash();
+            }
+            
+            window.scrollTo(0,0);
+        }
+
+        function kirish() {
+            const input = document.getElementById('ismInput').value.trim();
+            if(!input) {
+                return alert("ILTIMOS, ISM VA FAMILIYANGIZNI KIRITING!");
+            }
+            
+            foydalanuvchi = input;
+            localStorage.setItem('cyber_user_name', foydalanuvchi);
+            tizimgaKirildi();
+        }
+
+        function tizimgaKirildi() {
+            document.getElementById('salomMatni').innerText = `XUSH KELIBSIZ, ${foydalanuvchi.toUpperCase()}_`;
+            sahifagaUtish('menyuSahifasi');
+        }
+
+        function chiqish() {
+            if(confirm("Tizimdan chiqishni xohlaysizmi? Barcha natijalar bekor qilinadi va noldan boshlaysiz.")) {
+                foydalanuvchi = "";
+                localStorage.removeItem('cyber_user_name');
+                localStorage.removeItem('cyber_p_v5'); 
+                sahifagaUtish('kirishSahifasi');
+                window.location.reload();
+            }
+        }
+
+        function toggleDropdown(event) {
+            event.stopPropagation();
+            const drop = document.getElementById('modulDropdown');
+            if (drop.style.display === 'block') {
+                drop.style.display = 'none';
+            } else {
+                drop.style.display = 'block';
+            }
+        }
+
+        document.addEventListener('click', function() {
+            const drop = document.getElementById('modulDropdown');
+            if(drop) {
+                drop.style.display = 'none';
+            }
+        });
+
+        function yangilashNavbar() {
+            const drop = document.getElementById('modulDropdown');
+            drop.innerHTML = "";
+            
+            darslar.forEach((d, i) => {
+                const qulf = i > progress;
+                const div = document.createElement('div');
+                div.className = `dropdown-item ${qulf ? 'qulf' : ''}`;
+                div.innerHTML = `<span>${d.t}</span> <span>${qulf ? '🔒' : '✅'}</span>`;
+                
+                if(!qulf) { 
+                    div.onclick = () => { 
+                        joriyDars = d; 
+                        darsniOchish(); 
+                    }; 
+                }
+                
+                drop.appendChild(div);
+            });
+        }
+
+        function menuniYangilash() {
+            const joy = document.getElementById('darslarJoyi');
+            joy.innerHTML = "";
+            
+            if (darslar.length === 0) {
+                joy.innerHTML = "<p style='color:white;'>Hozircha darslar mavjud emas.</p>";
+                return;
+            }
+
+            darslar.forEach((d, i) => {
+                const qulf = i > progress;
+                const karta = document.createElement('div');
+                karta.className = "dars-karta";
+                
+                let rasmUrl = `https://img.youtube.com/vi/${getYoutubeID(d.v)}/hqdefault.jpg`;
+                
+                karta.innerHTML = `
+                    <img src="${rasmUrl}" class="karta-rasm">
+                    ${qulf ? '<div class="qulf-qatlami">🔒</div>' : ''}
+                    <div class="karta-nomi">
+                        <span style="flex:1;">${d.t}</span> 
+                        <span style="color:var(--neon-yashil); font-size:1.2rem;">${qulf ? '' : '▶'}</span>
+                    </div>
+                `;
+                
+                if(!qulf) { 
+                    karta.onclick = () => { 
+                        joriyDars = d; 
+                        darsniOchish(); 
+                    }; 
+                }
+                
+                joy.appendChild(karta);
+            });
+        }
+
+        function yangilashProfil() {
+            document.getElementById('profilIsm').innerText = foydalanuvchi.toUpperCase();
+            document.getElementById('profilProgress').innerText = `O'zlashtirish ko'rsatkichi: ${progress}/${darslar.length} modul`;
+            
+            const joy = document.getElementById('profilSertifikatlarJoyi');
+            joy.innerHTML = "";
+
+            if(progress === 0) {
+                joy.innerHTML = `<p style="color:#aaa; font-style:italic;">Hali birorta modul yakunlanmagan. O'qishni boshlang!</p>`;
+            } else {
+                for(let i = 0; i < progress; i++) {
+                    const modul = darslar[i];
+                    if(!modul) continue; 
+                    const karta = document.createElement('div');
+                    karta.className = "modul-sertifikat-karta";
+                    karta.innerHTML = `
+                        <div>
+                            <h3 class="modul-sertifikat-nomi">${modul.t}</h3>
+                            <p class="modul-sertifikat-status">✓ Muvaffaqiyatli tamomlandi</p>
+                        </div>
+                        <div class="modul-badge">🎖️</div>
+                    `;
+                    joy.appendChild(karta);
+                }
+
+                if(progress >= darslar.length && darslar.length > 0) {
+                    const finalDiv = document.createElement('div');
+                    finalDiv.className = "final-sertifikat-karta";
+                    finalDiv.innerHTML = `
+                        <h2 style="color:var(--oltin); margin-top:0;">TABRIKLAYMIZ!</h2>
+                        <p style="color:#fff; font-size:1.1rem; margin-bottom: 20px;">Siz barcha bosqichlarni muvaffaqiyatli tugatib, to'liq kiberxavfsizlik o'quv dasturini yakunladingiz.</p>
+                        <button class="tugma" style="background:var(--oltin); color:#000;" onclick="tayyorlashSertifikat()">ASOSIY SERTIFIKATNI OLISH</button>
+                    `;
+                    joy.appendChild(finalDiv);
+                }
+            }
+        }
+
+        function getYoutubeID(url) {
+            if (!url) return "";
+            let videoId = "";
+            if (url.includes("youtu.be/")) {
+                videoId = url.split("youtu.be/")[1].split("?")[0];
+            } else if (url.includes("watch?v=")) {
+                videoId = url.split("watch?v=")[1].split("&")[0];
+            } else if (url.includes("shorts/")) {
+                videoId = url.split("shorts/")[1].split("?")[0];
+            } else {
+                videoId = url; 
+            }
+            return videoId;
+        }
+
+        function darsniOchish() {
+            document.getElementById('darsSarlavha').innerText = joriyDars.t;
+            const yt = document.getElementById('darsVideo');
+            const videoManzil = joriyDars.v || "";
+
+            const videoId = getYoutubeID(videoManzil);
+            yt.src = `https://www.youtube.com/embed/${videoId}?autoplay=1`;
+            
+            sahifagaUtish('darsSahifasi');
+        }
+
+        function testniBoshlash() {
+            const yt = document.getElementById('darsVideo');
+            yt.src = yt.src; // Videoni to'xtatish uchun
+            
+            const joy = document.getElementById('testKonteyner');
+            const sList = testlar[joriyDars.id];
+            
+            if(!sList || sList.length === 0) {
+                alert("Ushbu modul uchun testlar hali qo'shilmagan!");
+                return;
+            }
+
+            joy.innerHTML = sList.map((item, i) => `
+                <div class="savol-bloki">
+                    <p class="savol-matn">${i+1}. ${item.q}</p>
+                    ${item.a.map((ans, ai) => `
+                        <label class="variant">
+                            <input type="radio" name="savol${i}" value="${ans}"> ${ans}
+                        </label>
+                    `).join("")}
+                </div>
+            `).join("");
+            
+            sahifagaUtish('testSahifasi');
+        }
+
+        function natijaniHisoblash() {
+            const sList = testlar[joriyDars.id];
+            let tugri = 0;
+            
+            sList.forEach((item, i) => {
+                const tanlangan = document.querySelector(`input[name="savol${i}"]:checked`);
+                if(tanlangan && tanlangan.value === item.c) {
+                    tugri++;
+                }
+            });
+
+            let foiz = Math.round((tugri / sList.length) * 100);
+            const aylana = document.getElementById('aylana');
+            aylana.innerText = foiz + "%";
+            
+            const st = document.getElementById('statusMatni');
+            const nxt = document.getElementById('nextBtn');
+
+            if(foiz >= 60) {
+                st.style.color = "var(--neon-yashil)";
+                aylana.style.borderColor = "var(--neon-yashil)";
+                aylana.style.color = "var(--neon-yashil)";
+                
+                if (joriyDars.id === darslar[darslar.length - 1].id) {
+                    st.innerText = "BARCHA MODULLAR YAKUNLANDI!";
+                    nxt.innerText = "YUTUQLAR (PROFIL) GA O'TISH";
+                    
+                    if(progress < darslar.length) { 
+                        progress = darslar.length; 
+                        localStorage.setItem('cyber_p_v5', progress); 
+                    }
+                    
+                    nxt.onclick = () => { 
+                        sahifagaUtish('profilSahifasi'); 
+                    };
+                } else {
+                    st.innerText = "TABRIKLAYMIZ! KEYINGI MODUL OCHILDI.";
+                    nxt.innerText = "KEYINGI MODULGA O'TISH";
+                    
+                    let currentIndex = darslar.findIndex(d => d.id === joriyDars.id);
+                    if(progress <= currentIndex) {
+                        progress = currentIndex + 1; 
+                        localStorage.setItem('cyber_p_v5', progress);
+                    }
+                    
+                    nxt.onclick = () => { 
+                        sahifagaUtish('menyuSahifasi'); 
+                    };
+                }
+            } else {
+                st.innerText = "NATIJA YETARLI EMAS (KAMIDA 60%).";
+                st.style.color = "#ff4444";
+                aylana.style.borderColor = "#ff4444";
+                aylana.style.color = "#ff4444";
+                
+                nxt.innerText = "QAYTADAN URINISH";
+                
+                nxt.onclick = () => { 
+                    sahifagaUtish('darsSahifasi'); 
+                };
+            }
+            
+            sahifagaUtish('natijaSahifasi');
+        }
+
+        function tayyorlashSertifikat() {
+            document.getElementById('certIsm').innerText = foydalanuvchi.toUpperCase();
+            
+            const sana = new Date();
+            const formatSana = `${sana.getDate().toString().padStart(2, '0')}.${(sana.getMonth()+1).toString().padStart(2, '0')}.${sana.getFullYear()}`;
+            document.getElementById('certSana').innerText = formatSana;
+            
+            const qrJoy = document.getElementById("qrcode");
+            qrJoy.innerHTML = "";
+            
+            new QRCode(qrJoy, {
+                text: `https://cyberacademy.uz/verify/${foydalanuvchi.replace(/ /g, '_')}_${Date.now()}`,
+                width: 110, 
+                height: 110, 
+                colorDark : "#000000", 
+                colorLight : "#ffffff"
+            });
+            
+            sahifagaUtish('sertifikatSahifasi');
+        }
+
+        async function yuklabOlishPDF() {
+            const { jsPDF } = window.jspdf;
+            const element = document.getElementById('sertifikatBloki');
+            
+            const opt = {
+                scale: 2.5,
+                useCORS: true,
+                backgroundColor: "#000000"
+            };
+
+            html2canvas(element, opt).then(canvas => {
+                const imgData = canvas.toDataURL('image/png');
+                const pdf = new jsPDF({
+                    orientation: 'landscape',
+                    unit: 'px',
+                    format: [canvas.width, canvas.height]
+                });
+                
+                pdf.addImage(imgData, 'PNG', 0, 0, canvas.width, canvas.height);
+                pdf.save(`CyberAcademy_Sertifikat_${foydalanuvchi.replace(/ /g, '_')}.pdf`);
+            });
+        }
+
+        // =========================================
+        // SHIFRLASH (VIGENÈRE A=1 Z=26) LOGIKASI
+        // =========================================
+        
+        function harfIndeksi(harf) {
+            return harf.toUpperCase().charCodeAt(0) - 64;
+        }
+
+        function indeksdanHarf(indeks, isLower) {
+            let m = indeks % 26;
+            if (m === 0) m = 26; 
+            let char = String.fromCharCode(m + 64);
+            return isLower ? char.toLowerCase() : char;
+        }
+
+        function jadvalniChiz(qatorNomlari, ustunlar) {
+            let html = '<table class="cipher-table"><tbody>';
+            for (let r = 0; r < qatorNomlari.length; r++) {
+                html += '<tr>';
+                html += `<th>${qatorNomlari[r]}</th>`;
+                for (let c = 0; c < ustunlar.length; c++) {
+                    html += `<td>${ustunlar[c][r]}</td>`;
+                }
+                html += '</tr>';
+            }
+            html += '</tbody></table>';
+            document.getElementById('cipherJadvalKonteyner').innerHTML = html;
+        }
+
+        function shifrlashVigenere() {
+            let matn = document.getElementById('cipherMatn').value.trim();
+            let kalit = document.getElementById('cipherKalit').value.trim();
+            if (!matn || !kalit) return alert("Matn va kalitni kiriting!");
+
+            let kalitHarflar = kalit.split('').filter(c => /[a-zA-Z]/.test(c)).map(c => c.toUpperCase());
+            if (kalitHarflar.length === 0) return alert("Kalitda kamida 1 ta lotin harfi bo'lishi kerak!");
+
+            let qatorNomlari = ["Ti", "Gi", "Ti(1-26)", "Gi(1-26)", "Ti+Gi", "mod 26", "Ci"];
+            let ustunlar = [];
+            let natijaStr = "";
+            let kIdx = 0;
+
+            for (let i = 0; i < matn.length; i++) {
+                let char = matn[i];
+                if (/[a-zA-Z]/.test(char)) {
+                    let isLower = (char === char.toLowerCase());
+                    let t_num = harfIndeksi(char);
+                    let g_char = kalitHarflar[kIdx % kalitHarflar.length];
+                    let g_num = harfIndeksi(g_char);
+
+                    let yigindi = t_num + g_num;
+                    let mod_val = yigindi % 26;
+                    if (mod_val === 0) mod_val = 26;
+
+                    let c_harf = indeksdanHarf(mod_val, isLower);
+
+                    ustunlar.push([char, g_char, t_num, g_num, yigindi, mod_val, c_harf]);
+                    natijaStr += c_harf;
+                    kIdx++;
+                } else {
+                    natijaStr += char; 
+                }
+            }
+
+            jadvalniChiz(qatorNomlari, ustunlar);
+            document.getElementById('cipherNatija').value = natijaStr;
+        }
+
+        function deshifrlashVigenere() {
+            let matn = document.getElementById('cipherMatn').value.trim();
+            let kalit = document.getElementById('cipherKalit').value.trim();
+            if (!matn || !kalit) return alert("Matn va kalitni kiriting!");
+
+            let kalitHarflar = kalit.split('').filter(c => /[a-zA-Z]/.test(c)).map(c => c.toUpperCase());
+            if (kalitHarflar.length === 0) return alert("Kalitda kamida 1 ta lotin harfi bo'lishi kerak!");
+
+            let qatorNomlari = ["Ci", "Gi", "Ci(1-26)", "Gi(1-26)", "Ci-Gi", "+26", "mod 26", "Ti"];
+            let ustunlar = [];
+            let natijaStr = "";
+            let kIdx = 0;
+
+            for (let i = 0; i < matn.length; i++) {
+                let char = matn[i];
+                if (/[a-zA-Z]/.test(char)) {
+                    let isLower = (char === char.toLowerCase());
+                    let c_num = harfIndeksi(char);
+                    let g_char = kalitHarflar[kIdx % kalitHarflar.length];
+                    let g_num = harfIndeksi(g_char);
+
+                    let farq = c_num - g_num;
+                    let plus26 = farq + 26;
+                    let mod_val = plus26 % 26;
+                    if (mod_val === 0) mod_val = 26;
+
+                    let t_harf = indeksdanHarf(mod_val, isLower);
+
+                    ustunlar.push([char, g_char, c_num, g_num, farq, plus26, mod_val, t_harf]);
+                    natijaStr += t_harf;
+                    kIdx++;
+                } else {
+                    natijaStr += char;
+                }
+            }
+
+            jadvalniChiz(qatorNomlari, ustunlar);
+            document.getElementById('cipherNatija').value = natijaStr;
+        }
+
+        function tozalashCipher() {
+            document.getElementById('cipherMatn').value = "";
+            document.getElementById('cipherKalit').value = "";
+            document.getElementById('cipherNatija').value = "";
+            document.getElementById('cipherJadvalKonteyner').innerHTML = "";
+        }
+
+        function nusxalashCipher() {
+            let natijaInput = document.getElementById('cipherNatija');
+            if (natijaInput.value) {
+                navigator.clipboard.writeText(natijaInput.value).then(() => {
+                    alert("Kiber-natija nusxalandi! ✅");
+                });
+            } else {
+                alert("Nusxalash uchun hech narsa yo'q!");
+            }
+        }
+    </script>
+</body>
+</html>
